@@ -20,9 +20,8 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     var audioRecorder: AVAudioRecorder!
 
     @IBAction func recordAudio(_ sender: Any) {
-        recordLabel.text = "Recording in progress"
-        stopRecordingButton.isEnabled = true
-        recordButton.isEnabled = false
+        
+        configureUI(isRecording: true)
         
         //implement AVAudoRecorder to actually record 
         let dirPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
@@ -41,12 +40,17 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     }
     
     @IBAction func stopRecording(_ sender: Any) {
-        recordButton.isEnabled = true
-        stopRecordingButton.isEnabled = false
-        recordLabel.text = "Tap to record"
+        
+        configureUI(isRecording: false)
         audioRecorder.stop()
         let audioSession = AVAudioSession.sharedInstance()
         try! audioSession.setActive(false)
+    }
+    
+    func configureUI(isRecording: Bool) {
+        recordLabel.text = isRecording ? "Recording in progress" : "Tap to Record"
+        stopRecordingButton.isEnabled = isRecording
+        recordButton.isEnabled = !isRecording
     }
     
     
@@ -70,6 +74,12 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         }
         else {
             print("recording failed")
+            // present a UIAlertController letting the user know
+            let alertController = UIAlertController(title: "Oops!", message: "Sorry, recording failed, please try again!", preferredStyle: .alert)
+            let alertControllerAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+            alertController.addAction(alertControllerAction)
+            present(alertController, animated: true, completion: nil)
+            
         }
     }
     
