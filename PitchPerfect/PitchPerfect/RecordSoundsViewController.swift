@@ -57,6 +57,10 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // set the content mode for the recording and stop recording button so they don't look squished
+        recordButton.imageView?.contentMode = .scaleAspectFit
+        stopRecordingButton.imageView?.contentMode = .scaleAspectFit
+        
         stopRecordingButton.isEnabled = false
     }
     
