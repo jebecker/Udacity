@@ -113,6 +113,7 @@ class MainMemeMeViewController: UIViewController, UINavigationControllerDelegate
         bottomTextField.text = "BOTTOM"
         topTextField.resignFirstResponder()
         bottomTextField.resignFirstResponder()
+        configureUI()
     }
     
    // MARK: - Set up the notification center to start observiing for the keyboard to either show/hide it
