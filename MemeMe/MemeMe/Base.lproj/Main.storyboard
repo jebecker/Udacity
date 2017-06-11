@@ -13,6 +13,7 @@
         <scene sceneID="w6H-4o-r9y">
             <objects>
                 <navigationController id="LV8-fp-bda" sceneMemberID="viewController">
+                    <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="GcC-HY-zaQ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -35,7 +36,7 @@
                         <viewControllerLayoutGuide type="bottom" id="OW9-rU-9JD"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="QoH-lB-KQa">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="524"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z2X-5H-nEm">
@@ -48,6 +49,9 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBlack" family="Helvetica Neue" pointSize="40"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters"/>
+                                <connections>
+                                    <outlet property="delegate" destination="Z72-nF-6b6" id="NZ4-dJ-dML"/>
+                                </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Bottom" textAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="24" translatesAutoresizingMaskIntoConstraints="NO" id="9xf-Ce-0bR">
                                 <rect key="frame" x="0.0" y="432" width="320" height="48"/>
@@ -55,6 +59,9 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBlack" family="Helvetica Neue" pointSize="40"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters"/>
+                                <connections>
+                                    <outlet property="delegate" destination="Z72-nF-6b6" id="Y4L-rI-N9r"/>
+                                </connections>
                             </textField>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" restorationIdentifier="selectionToolBar" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iat-5c-MwC" userLabel="Selection Toolbar">
                                 <rect key="frame" x="0.0" y="480" width="320" height="44"/>
@@ -91,6 +98,7 @@
                             <constraint firstAttribute="trailing" secondItem="Iat-5c-MwC" secondAttribute="trailing" id="mle-d7-xk4"/>
                         </constraints>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout" top="YES"/>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="Jd9-lM-xnI">
                         <barButtonItem key="leftBarButtonItem" systemItem="action" id="7nm-hJ-7Rg">

@@ -50,30 +50,21 @@ class MainMemeMeViewController: UIViewController, UINavigationControllerDelegate
     @IBAction func cameraButtonPressed(_ sender: Any) {
     
         // bring up the phones camera so the user can take a picture
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = imagePickerDelegate
-        imagePicker.sourceType = .camera
-        present(imagePicker, animated: true, completion: nil)
-        
+        pick(sourceType: .camera)
     }
     
     // IBAction that will present the camera album to the user to allow them to pick the picture they want to meme
     @IBAction func albumButtonPressed(_ sender: Any) {
        
         // bring up the camera roll so the user can pick a picture
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = imagePickerDelegate
-        imagePicker.sourceType = .photoLibrary
-        present(imagePicker, animated: true, completion: nil)
+        pick(sourceType: .photoLibrary)
     }
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // assign the textfields delegate to UITextFieldDelegate
-        topTextField.delegate = self
-        bottomTextField.delegate = self
+        // assign imagePickerDelegate
         imagePickerDelegate = MemeMeImagePickerDelegate(imageView: imageView)
         
         // call the configureUI method
@@ -102,14 +93,16 @@ class MainMemeMeViewController: UIViewController, UINavigationControllerDelegate
     func configureUI() {
         
         // set a list of properties for the text atributes
-        let memeTextAtrributes = [NSStrokeColorAttributeName: UIColor.black,
-                                  NSForegroundColorAttributeName: UIColor.white]
+        let memeTextAtrributes: [String: Any] = [NSStrokeColorAttributeName: UIColor.black,
+                                              NSForegroundColorAttributeName: UIColor.white,
+                                              NSFontAttributeName: UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
+                                              NSStrokeWidthAttributeName: -4]
         
         // set the top and bottom text field attributes to the dictionary of attributes we set above
-        topTextField.defaultTextAttributes = memeTextAtrributes
-        bottomTextField.defaultTextAttributes = memeTextAtrributes
-        topTextField.textAlignment = .center
-        bottomTextField.textAlignment = .center
+        prepareTextField(textField: topTextField, attributes: memeTextAtrributes)
+        prepareTextField(textField: bottomTextField, attributes: memeTextAtrributes)
+        
+        // set the image viwes content mode
         imageView.contentMode = .scaleAspectFit
     }
     
@@ -147,7 +140,7 @@ class MainMemeMeViewController: UIViewController, UINavigationControllerDelegate
         // adjust the view for the keyboard so nothing gets cut off for the bottom text field only
         
         if bottomTextField.isEditing {
-            view.frame.origin.y -= getKeyboardHeight(notification: notification)
+            view.frame.origin.y = -getKeyboardHeight(notification: notification)
         }
         
     }
@@ -173,6 +166,25 @@ class MainMemeMeViewController: UIViewController, UINavigationControllerDelegate
         return true
     }
     
+    // MARK: - Methods to configure the UITextFields
+    
+    func prepareTextField(textField: UITextField, attributes: [String: Any]) {
+        textField.defaultTextAttributes = attributes
+        textField.textAlignment = .center
+    }
+    
+    // MARK: - UIImagePickerController method to pick the desired image picker
+    
+    func pick(sourceType: UIImagePickerControllerSourceType) {
+        
+        // bring up the phones camera so the user can take a picture
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = imagePickerDelegate
+        imagePicker.sourceType = sourceType
+        present(imagePicker, animated: true, completion: nil)
+
+    }
+    
     // MARK: - Method to generate/save the memed image
     
     // Method to generate the memed image
@@ -183,10 +195,10 @@ class MainMemeMeViewController: UIViewController, UINavigationControllerDelegate
         navigationController?.navigationBar.isHidden = true
         
         // Render the view to an image
-        UIGraphicsBeginImageContext(self.view.frame.size)
-        view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
+        UIGraphicsBeginImageContext(view.frame.size)
+        view.drawHierarchy(in: view.frame, afterScreenUpdates: true)
         let memedImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
+        UIGraphicsEndImageContext() 
         
         // no re-show the toolbar and nav bar
         toolbar.isHidden = false
