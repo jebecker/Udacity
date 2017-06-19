@@ -41,9 +41,14 @@ class MainMemeMeViewController: UIViewController, UINavigationControllerDelegate
         }
     }
     
-    // Return the view to its original state if a user taps the cancel button
+    // Return the view to its original state if a user taps the cancel button and take the user back to the initial view controller
     @IBAction func cancelButtonPressed(_ sender: Any) {
         clearView()
+        
+        if let navigationController = self.navigationController {
+            navigationController.popToRootViewController(animated: true)
+        }
+        
     }
     
     // IBAction that will present the camera to the user to allow them to take a picture they want to meme
@@ -211,6 +216,14 @@ class MainMemeMeViewController: UIViewController, UINavigationControllerDelegate
     func save(memedImage: UIImage) {
         // create the meme 
         let meme = Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: imageView.image!, memedImage: memedImage)
+        
+        let object = UIApplication.shared.delegate
+        let appDelegate = object as! AppDelegate
+        appDelegate.memes.append(meme)
+        
+        print(appDelegate.memes.count)
+        
+        navigationController?.popToRootViewController(animated: true)
     }
     
 }

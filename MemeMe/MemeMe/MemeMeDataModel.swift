@@ -1,5 +1,5 @@
 //
-//  MemeMeDtMdl.swift
+//  MemeMeDataModel.swift
 //  MemeMe
 //
 //  Created by Jayme Becker on 5/28/17.
