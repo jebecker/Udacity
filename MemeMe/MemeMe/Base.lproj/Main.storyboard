@@ -93,7 +93,7 @@
         <scene sceneID="WCu-1z-9RO">
             <objects>
                 <navigationController storyboardIdentifier="SentMemesCollectionViewNavController" title="Sent Memes CollectionView NavController" id="H4n-FD-BdF" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Grid " selectedImage="CollectionViewImage" id="7Jo-VZ-moa"/>
+                    <tabBarItem key="tabBarItem" title="Grid " image="CollectionViewImage" selectedImage="CollectionViewImage" id="7Jo-VZ-moa"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="d00-d7-JmW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -339,7 +339,7 @@
         <scene sceneID="8Gj-If-f1A">
             <objects>
                 <navigationController storyboardIdentifier="SentMemesTableViewNavController" title="Sent Memes TableView NavController" id="YRz-s3-h0A" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Table " selectedImage="TableViewImage" id="uxM-0J-9FZ"/>
+                    <tabBarItem key="tabBarItem" title="Table " image="TableViewImage" selectedImage="TableViewImage" id="uxM-0J-9FZ"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="7cb-rz-6DZ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
