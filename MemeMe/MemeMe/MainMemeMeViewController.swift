@@ -45,9 +45,7 @@ class MainMemeMeViewController: UIViewController, UINavigationControllerDelegate
     @IBAction func cancelButtonPressed(_ sender: Any) {
         clearView()
         
-        if let navigationController = self.navigationController {
-            navigationController.popToRootViewController(animated: true)
-        }
+        dismiss(animated: true, completion: nil)
         
     }
     
@@ -217,13 +215,11 @@ class MainMemeMeViewController: UIViewController, UINavigationControllerDelegate
         // create the meme 
         let meme = Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: imageView.image!, memedImage: memedImage)
         
-        let object = UIApplication.shared.delegate
-        let appDelegate = object as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.memes.append(meme)
         
-        print(appDelegate.memes.count)
+        dismiss(animated: true, completion: nil)
         
-        navigationController?.popToRootViewController(animated: true)
     }
     
 }
