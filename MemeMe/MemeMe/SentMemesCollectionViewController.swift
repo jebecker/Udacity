@@ -39,6 +39,8 @@ class SentMemesCollectionViewController: UICollectionViewController {
     
     // reload the data when the view re-appears
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
         collectionView?.reloadData()
     }
 

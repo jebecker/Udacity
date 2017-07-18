@@ -77,9 +77,16 @@ class MainMemeMeViewController: UIViewController, UINavigationControllerDelegate
     
     override func viewWillAppear(_ animated: Bool) {
         
+        super.viewWillAppear(animated)
+        
         // check whether the device has a camera, if not, disable the camera button
         if !UIImagePickerController.isSourceTypeAvailable(.camera) {
             cameraButton.isEnabled = false
+        }
+        
+        //enable the social share button if the imageView has an image
+        if imageView.image != nil {
+            socialShareButton.isEnabled = true
         }
         
         // subscribe to the keyboard notifications
@@ -87,6 +94,9 @@ class MainMemeMeViewController: UIViewController, UINavigationControllerDelegate
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        
+        super.viewWillDisappear(animated)
+        
         // unsubscribe to the keyboard notifications
         unsubscribeToKeyboardNotifications()
     }
@@ -107,6 +117,8 @@ class MainMemeMeViewController: UIViewController, UINavigationControllerDelegate
         
         // set the image viwes content mode
         imageView.contentMode = .scaleAspectFit
+        
+        socialShareButton.isEnabled = false
     }
     
     // custom method to clear the view if the cancel button is pressed
@@ -195,8 +207,7 @@ class MainMemeMeViewController: UIViewController, UINavigationControllerDelegate
     func generateMemedImage() -> UIImage {
         
         // hide the toolbar and nav bar first so that way we can capture the screen with the image and text without having the toolbar and nav bar in the memed image
-        toolbar.isHidden = true
-        navigationController?.navigationBar.isHidden = true
+        hideToolbarAndNavBar()
         
         // Render the view to an image
         UIGraphicsBeginImageContext(view.frame.size)
@@ -204,11 +215,21 @@ class MainMemeMeViewController: UIViewController, UINavigationControllerDelegate
         let memedImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext() 
         
-        // no re-show the toolbar and nav bar
-        toolbar.isHidden = false
-        navigationController?.navigationBar.isHidden = false
+        // now re-show the toolbar and nav bar
+        unhideToolbarAndNavBar()
         
         return memedImage
+    }
+    
+    // methods to either show/hide the toolbar/navbar
+    func hideToolbarAndNavBar() {
+        toolbar.isHidden = true
+        navigationController?.navigationBar.isHidden = true
+    }
+    
+    func unhideToolbarAndNavBar() {
+        toolbar.isHidden = false
+        navigationController?.navigationBar.isHidden = false
     }
     
     func save(memedImage: UIImage) {
@@ -247,6 +268,7 @@ class MemeMeImagePickerDelegate: NSObject, UIImagePickerControllerDelegate, UINa
         }
         
         picker.dismiss(animated: true, completion: nil)
+        
     }
     
 }
