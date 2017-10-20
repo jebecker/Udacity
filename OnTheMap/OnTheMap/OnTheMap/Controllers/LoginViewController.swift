@@ -18,7 +18,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var noAccountStackView: UIStackView!
     @IBOutlet weak var userCapturedStackView: UIStackView!
     @IBOutlet weak var udacityLogoImageView: UIImageView!
-    @IBOutlet weak var debugLabel: UILabel!
     
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
@@ -66,10 +65,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        debugLabel.text = ""
-        
         subscribeToKeyboardNotifications()
-
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -80,10 +76,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     // complete the login process and present the main tab bar navigation controller
     func completeLogin(userId: String) {
-        
-        performUIUpdatesOnMain {
-            self.debugLabel.text = ""
-        }
         
         // Grab the logged in users first name and last name
         APIClient.sharedInstance().getUdacityUserInformation(userId: userId) { (result, error) in
@@ -121,9 +113,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     func subscribeToKeyboardNotifications() {
         
-        // Add an observer to the notification center to fire the 'keyboardWillShow' method
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
-        
         // Add an observer for the keyboardWillHide method in order to bring the view back to its original position
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
     }
@@ -131,32 +120,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     func unsubscribeToKeyboardNotifications() {
         
         // Remove the observer in the Notification center that controls the .UIKeyboardWillShow/hide notification
-        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
     }
     
     // MARK: - Custom Methods to show and hide the keyboard corerctly
-    
-    @objc func keyboardWillShow(notification: Notification) {
-        // adjust the view for the keyboard so nothing gets cut off for the bottom text field only
-        if passwordTextField.isEditing {
-            view.frame.origin.y = -getKeyboardHeight(notification: notification)
-        }
-    }
-    
     @objc func keyboardWillHide(notification: Notification) {
         // adjust the view back to its original position
         view.frame.origin.y = 0
     }
-    
-    func getKeyboardHeight(notification: Notification) -> CGFloat {
-        
-        let userInfo = notification.userInfo
-        let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
-        
-        return (keyboardSize.cgRectValue.height - 175)
-    }
-
 }
 
 // extension to handle UI
