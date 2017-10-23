@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import MapKit
 
 extension APIClient {
     
@@ -39,7 +40,7 @@ extension APIClient {
     }
     
     // method to call the student location API method
-    func getStudentInformation(_ completionHandlerForStudentInformation: @escaping (_ result: [Student]?, _ error: NSError?) -> Void) {
+    func getStudentInformation(_ completionHandlerForStudentInformation: @escaping (_ result: Int?, _ error: NSError?) -> Void) {
         
         let _ = taskForGETMethod(Constants.Methods.ParseStudentLocation) { (results, error) in
             
@@ -56,7 +57,9 @@ extension APIClient {
             
             // we know we have a successful reponse if we get here
             let students = Student.studentsFromResults(results: results)
-            completionHandlerForStudentInformation(students, nil)
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.students = students
+            completionHandlerForStudentInformation(1, nil)
         }
     }
     
@@ -92,7 +95,10 @@ extension APIClient {
     }
     
     // MARK: - POST Student Location Method
-    func postStudentLocation(jsonBody: String, completionHandlerForPOSTStudentLocation: @escaping (_ result: Int?, _ error: NSError?) -> Void) {
+    func postStudentLocation(userId: String, firstName: String, lastName: String, mediaURL: String, latitude: CLLocationDegrees, longitude: CLLocationDegrees, location: String, completionHandlerForPOSTStudentLocation: @escaping (_ result: Int?, _ error: NSError?) -> Void) {
+        
+        // create the jsonBody for the request and define the method to be used
+        let jsonBody = "{\"\(Constants.JSONBodyKeys.UniqueKey)\": \"\(userId)\", \"\(Constants.JSONBodyKeys.FirstName)\": \"\(firstName)\", \"\(Constants.JSONBodyKeys.LastName)\": \"\(lastName)\",\"\(Constants.JSONBodyKeys.MapString)\": \"\(location)\", \"\(Constants.JSONBodyKeys.MediaURL)\": \"\(mediaURL)\",\"\(Constants.JSONBodyKeys.Latitude)\": \(latitude), \"\(Constants.JSONBodyKeys.Longitude)\": \(longitude)}"
         
         let _ = taskForPOSTMethod(Constants.Methods.ParseStudentLocation, jsonBody: jsonBody) { (result, error) in
             // check to see if there was an error returned

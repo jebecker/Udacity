@@ -32,7 +32,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             
             APIClient.sharedInstance().establishUdacitySession(username: username, password: password) { (result, error) in
                 guard (error == nil) else {
-                    self.displayError(errorString: "Could not establish a UDACITY session!")
+                    self.displayError(errorString: error!.localizedDescription)
                     return
                 }
                 
@@ -114,12 +114,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     func subscribeToKeyboardNotifications() {
         
         // Add an observer for the keyboardWillHide method in order to bring the view back to its original position
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
     }
     
     func unsubscribeToKeyboardNotifications() {
         
         // Remove the observer in the Notification center that controls the .UIKeyboardWillShow/hide notification
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
     }
     
@@ -128,6 +130,30 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         // adjust the view back to its original position
         view.frame.origin.y = 0
     }
+    
+    @objc func keyboardWillShow(notification: Notification) {
+        // adjust the view for the keyboard so nothing gets cut off for the bottom text field only
+        // depending on the orientation of the device, adjust the amount the screen shifts
+        switch UIDevice.current.orientation {
+        case .landscapeLeft:
+            view.frame.origin.y = -getKeyboardHeight(notification: notification)
+        case .landscapeRight:
+            view.frame.origin.y = -getKeyboardHeight(notification: notification)
+        case .portrait:
+            view.frame.origin.y = (-getKeyboardHeight(notification: notification) + 175)
+        default:
+            break
+        }
+    }
+
+    func getKeyboardHeight(notification: Notification) -> CGFloat {
+        
+        let userInfo = notification.userInfo
+        let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
+        
+        return (keyboardSize.cgRectValue.height)
+    }
+
 }
 
 // extension to handle UI

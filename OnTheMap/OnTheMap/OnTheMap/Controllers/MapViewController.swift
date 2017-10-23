@@ -11,7 +11,7 @@ import MapKit
 
 class MapViewController: UIViewController {
     var mapViewDelegate: MapViewDelegate?
-    var students: [Student]?
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
     // MARK: - IBOutlets/IBActions
     @IBOutlet weak var mapView: MKMapView!
@@ -45,16 +45,15 @@ class MapViewController: UIViewController {
     
     func configureMapView() {
 
-        APIClient.sharedInstance().getStudentInformation() { (students, error) in
-                guard let students = students else {
-                    self.displayAlert(message: "Could not get student information from the server. Please try again!")
-                    return
-                }
+        APIClient.sharedInstance().getStudentInformation() { (result, error) in
+            guard result != nil else {
+                self.displayAlert(message: "Could not get student information from the server. Please try again!")
+                return
+            }
                 
-                self.students = students
-                self.mapViewDelegate = MapViewDelegate(mapView: self.mapView, students: students)
-                self.mapViewDelegate?.addAnnotations()
-                self.mapView.delegate = self.mapViewDelegate
+            self.mapViewDelegate = MapViewDelegate(mapView: self.mapView, students: self.appDelegate.students!)
+            self.mapViewDelegate?.addAnnotations()
+            self.mapView.delegate = self.mapViewDelegate
         }
     }
     

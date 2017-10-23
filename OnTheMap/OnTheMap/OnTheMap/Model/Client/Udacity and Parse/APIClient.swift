@@ -225,14 +225,14 @@ class APIClient: NSObject {
             
             // was there an error returned in the response
             guard (error == nil) else {
-                sendError(error: "There was an error with your UDACITY SESSION request \(error!)")
+                sendError(error: "\(error!.localizedDescription)")
                 return
             }
             
             // make sure we got a successfull 2xx response from the request
             guard let httpStatusCode = (response as? HTTPURLResponse)?.statusCode,
                 httpStatusCode >= 200 && httpStatusCode <= 299 else {
-                sendError(error: "The request did not return a valid 2xx httpStatusCode for the UDACITY SESSION REQUEST")
+                sendError(error: "Sorry, but either your username and/or password does not match! Please try again.")
                 return
             }
             

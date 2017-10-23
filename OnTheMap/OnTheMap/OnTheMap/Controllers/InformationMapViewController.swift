@@ -90,10 +90,7 @@ class InformationMapViewController: UIViewController {
                 return
         }
         
-        // create the jsonBody for the request and define the method to be used
-        let jsonBody = "{\"\(Constants.JSONBodyKeys.UniqueKey)\": \"\(userId)\", \"\(Constants.JSONBodyKeys.FirstName)\": \"\(firstName)\", \"\(Constants.JSONBodyKeys.LastName)\": \"\(lastName)\",\"\(Constants.JSONBodyKeys.MapString)\": \"\(location)\", \"\(Constants.JSONBodyKeys.MediaURL)\": \"\(mediaURL)\",\"\(Constants.JSONBodyKeys.Latitude)\": \(latitude), \"\(Constants.JSONBodyKeys.Longitude)\": \(longitude)}"
-        
-        APIClient.sharedInstance().postStudentLocation(jsonBody: jsonBody) { (result, error) in
+        APIClient.sharedInstance().postStudentLocation(userId: userId, firstName: firstName, lastName: lastName, mediaURL: mediaURL, latitude: latitude, longitude: longitude, location: location) { (result, error) in
             // make sure we don't have an error
             guard (error == nil) else {
                 self.displayError(error: "Sorry, but we could not successfully post your location")

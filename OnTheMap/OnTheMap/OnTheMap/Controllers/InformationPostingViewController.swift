@@ -137,7 +137,7 @@ class InformationPostingViewController: UIViewController, UITextFieldDelegate {
     func subscribeToKeyboardNotifications() {
         
         // Add an observer to the notification center to fire the 'keyboardWillShow' method
-        //NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
         
         // Add an observer for the keyboardWillHide method in order to bring the view back to its original position
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
@@ -146,19 +146,25 @@ class InformationPostingViewController: UIViewController, UITextFieldDelegate {
     func unsubscribeToKeyboardNotifications() {
         
         // Remove the observer in the Notification center that controls the .UIKeyboardWillShow/hide notification
-        //NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
     }
     
     // MARK: - Custom Methods to show and hide the keyboard corerctly
     
     @objc func keyboardWillShow(notification: Notification) {
-        
         // adjust the view for the keyboard so nothing gets cut off for the bottom text field only
-//        if linkTextField.isEditing {
-//            view.frame.origin.y = -getKeyboardHeight(notification: notification)
-//        }
-        
+        // depending on the orientation of the device, adjust the amount the screen shifts
+        switch UIDevice.current.orientation {
+        case .landscapeLeft:
+            view.frame.origin.y = (-getKeyboardHeight(notification: notification) + 50)
+        case .landscapeRight:
+            view.frame.origin.y = (-getKeyboardHeight(notification: notification) + 50)
+        case .portrait:
+            view.frame.origin.y = (-getKeyboardHeight(notification: notification) + 175)
+        default:
+            break
+        }
     }
     
     @objc func keyboardWillHide(notification: Notification) {
