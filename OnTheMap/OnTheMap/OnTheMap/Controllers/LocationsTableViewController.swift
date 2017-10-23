@@ -11,7 +11,7 @@ import UIKit
 class LocationsTableViewController: UITableViewController {
 
     // MARK: - Properties
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    var students = Student()
     
     @IBAction func addPinButtonWasPressed(_ sender: UIBarButtonItem) {
         let informationPostingNavigationController = storyboard?.instantiateViewController(withIdentifier: "informationPostingNavigationController") as! UINavigationController
@@ -42,10 +42,12 @@ class LocationsTableViewController: UITableViewController {
     func configureView() {
         
         APIClient.sharedInstance().getStudentInformation() { (result, error) in
-            guard result != nil else {
+            guard let result = result else {
                 self.displayAlert(message: "Sorry, but we could not get the student information from the Udacity server at this time. Please try again!")
                 return
             }
+            
+            self.students = result
             
             performUIUpdatesOnMain {
                 self.tableView.reloadData()
@@ -72,14 +74,14 @@ class LocationsTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return appDelegate.students!.count
+        return students.array.count
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         // grab the student from the array of students
-        let student = appDelegate.students![indexPath.row]
+        let student = students.array[indexPath.row]
         
         let studentInformationCell = tableView.dequeueReusableCell(withIdentifier: "studentInformationCell") as! StudentInformationTableViewCell
         
@@ -92,7 +94,7 @@ class LocationsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // grab the specific rows student information
-        let student = appDelegate.students![indexPath.row]
+        let student = students.array[indexPath.row]
         
         // open the mediaURL of the student in SAFARI
         let app = UIApplication.shared

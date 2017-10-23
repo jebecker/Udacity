@@ -11,7 +11,7 @@ import MapKit
 
 class MapViewController: UIViewController {
     var mapViewDelegate: MapViewDelegate?
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+
     
     // MARK: - IBOutlets/IBActions
     @IBOutlet weak var mapView: MKMapView!
@@ -46,12 +46,12 @@ class MapViewController: UIViewController {
     func configureMapView() {
 
         APIClient.sharedInstance().getStudentInformation() { (result, error) in
-            guard result != nil else {
+            guard let result = result else {
                 self.displayAlert(message: "Could not get student information from the server. Please try again!")
                 return
             }
                 
-            self.mapViewDelegate = MapViewDelegate(mapView: self.mapView, students: self.appDelegate.students!)
+            self.mapViewDelegate = MapViewDelegate(mapView: self.mapView, students: result)
             self.mapViewDelegate?.addAnnotations()
             self.mapView.delegate = self.mapViewDelegate
         }
@@ -74,16 +74,18 @@ class MapViewDelegate: NSObject, MKMapViewDelegate {
     
     // declare properties
     var mapView: MKMapView
-    var students: [Student]
+    var students: Student
     var annotations = [MKPointAnnotation]()
     
     // custom init
-    init(mapView: MKMapView, students: [Student]) {
+    init(mapView: MKMapView, students: Student) {
         self.mapView = mapView
         self.students = students
     }
     
     func addAnnotations() {
+        
+        let students = self.students.array
         
         // loop through the array of students to grab their locations coordinates and student info
         for student in students {

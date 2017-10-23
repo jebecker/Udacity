@@ -20,6 +20,19 @@ struct Student {
     let mediaURL: String
     let latitude: Double
     let longitude: Double
+    var array = [Student]()
+    
+    // MARK: - Custom empty initializer
+    init() {
+        objectId = ""
+        uniqueKey = ""
+        firstName = ""
+        lastName = ""
+        location = ""
+        mediaURL = ""
+        latitude = 0
+        longitude = 0
+    }
     
     // MARK: - custom initializer
     init?(dictionary: [String:AnyObject]) {
@@ -48,15 +61,16 @@ struct Student {
         self.longitude = longitude
     }
     
-    static func studentsFromResults(results: [[String:AnyObject]]) -> [Student] {
+    static func studentsFromResults(results: [[String:AnyObject]]) -> Student {
         
-        var students = [Student]()
+        var students = Student()
         // iterate through the array of dictionaries since each student is its own dictionary
         for result in results {
             if let student = Student(dictionary: result) {
-                students.append(student)
+                students.array.append(student)
             }
         }
+        
         return students
     }
 }

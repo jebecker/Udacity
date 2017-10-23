@@ -40,7 +40,7 @@ extension APIClient {
     }
     
     // method to call the student location API method
-    func getStudentInformation(_ completionHandlerForStudentInformation: @escaping (_ result: Int?, _ error: NSError?) -> Void) {
+    func getStudentInformation(_ completionHandlerForStudentInformation: @escaping (_ result: Student?, _ error: NSError?) -> Void) {
         
         let _ = taskForGETMethod(Constants.Methods.ParseStudentLocation) { (results, error) in
             
@@ -57,9 +57,7 @@ extension APIClient {
             
             // we know we have a successful reponse if we get here
             let students = Student.studentsFromResults(results: results)
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate
-            appDelegate.students = students
-            completionHandlerForStudentInformation(1, nil)
+            completionHandlerForStudentInformation(students, nil)
         }
     }
     
