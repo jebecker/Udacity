@@ -53,7 +53,7 @@ class InformationPostingViewController: UIViewController, UITextFieldDelegate {
         } else {
             displayError(message: "You must enter a location AND a link in order to find a location!")
         }
-        
+         
     }
     
     // MARK: - Prepare for segue
