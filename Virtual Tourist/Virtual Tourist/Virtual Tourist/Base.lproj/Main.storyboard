@@ -67,6 +67,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="gFe-Cs-y8g">
+                                <rect key="frame" x="100" y="264" width="175" height="203"/>
+                                <color key="color" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
+                            </activityIndicatorView>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="Xbn-aR-CRK">
                                 <rect key="frame" x="0.0" y="64" width="375" height="172"/>
                                 <constraints>
@@ -77,29 +81,29 @@
                                 <rect key="frame" x="0.0" y="236" width="375" height="387"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="EQn-Fj-tX2">
-                                    <size key="itemSize" width="98" height="97"/>
+                                    <size key="itemSize" width="110" height="110"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="photoAlbumCollectionViewCell" id="KJG-wE-WCC" customClass="PhotoAlbumCollectionViewCell" customModule="Virtual_Tourist" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="98" height="97"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="110" height="110"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                            <rect key="frame" x="0.0" y="0.0" width="98" height="97"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="110" height="110"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="l6Q-61-kIQ">
-                                                    <rect key="frame" x="0.0" y="0.0" width="98" height="97"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="l6Q-61-kIQ">
+                                                    <rect key="frame" x="0.0" y="0.0" width="110" height="110"/>
                                                 </imageView>
                                             </subviews>
                                         </view>
                                         <constraints>
-                                            <constraint firstItem="l6Q-61-kIQ" firstAttribute="top" secondItem="KJG-wE-WCC" secondAttribute="top" id="8O4-xT-Hft"/>
-                                            <constraint firstItem="l6Q-61-kIQ" firstAttribute="leading" secondItem="KJG-wE-WCC" secondAttribute="leading" id="OSq-cH-V5M"/>
-                                            <constraint firstAttribute="trailing" secondItem="l6Q-61-kIQ" secondAttribute="trailing" id="oJB-CI-2kV"/>
-                                            <constraint firstAttribute="bottom" secondItem="l6Q-61-kIQ" secondAttribute="bottom" id="r5W-I8-efn"/>
+                                            <constraint firstItem="l6Q-61-kIQ" firstAttribute="top" secondItem="KJG-wE-WCC" secondAttribute="top" id="HGT-om-rsn"/>
+                                            <constraint firstAttribute="bottom" secondItem="l6Q-61-kIQ" secondAttribute="bottom" id="Wfc-Se-tqz"/>
+                                            <constraint firstItem="l6Q-61-kIQ" firstAttribute="leading" secondItem="KJG-wE-WCC" secondAttribute="leading" id="vL4-DH-9pw"/>
+                                            <constraint firstAttribute="trailing" secondItem="l6Q-61-kIQ" secondAttribute="trailing" id="zWm-f5-wGo"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="imageView" destination="l6Q-61-kIQ" id="WeO-93-Ocu"/>
@@ -125,16 +129,21 @@
                             <constraint firstItem="6Be-e5-G9s" firstAttribute="bottom" secondItem="6YR-zs-8dR" secondAttribute="bottom" id="CSc-1B-LP4"/>
                             <constraint firstItem="Xbn-aR-CRK" firstAttribute="leading" secondItem="6Be-e5-G9s" secondAttribute="leading" id="HNR-L0-tSU"/>
                             <constraint firstItem="6Be-e5-G9s" firstAttribute="trailing" secondItem="6YR-zs-8dR" secondAttribute="trailing" id="Jjm-w8-ba1"/>
+                            <constraint firstItem="6Be-e5-G9s" firstAttribute="bottom" secondItem="gFe-Cs-y8g" secondAttribute="bottom" constant="200" id="LV1-qe-kBN"/>
+                            <constraint firstItem="6Be-e5-G9s" firstAttribute="trailing" secondItem="gFe-Cs-y8g" secondAttribute="trailing" constant="100" id="SOa-pY-HyR"/>
                             <constraint firstItem="Xbn-aR-CRK" firstAttribute="top" secondItem="6Be-e5-G9s" secondAttribute="top" id="VJQ-SQ-uTh"/>
                             <constraint firstItem="6Be-e5-G9s" firstAttribute="trailing" secondItem="Xbn-aR-CRK" secondAttribute="trailing" id="ezq-PY-VbE"/>
+                            <constraint firstItem="gFe-Cs-y8g" firstAttribute="leading" secondItem="6Be-e5-G9s" secondAttribute="leading" constant="100" id="gFO-qS-VtS"/>
                             <constraint firstItem="hPA-yP-38v" firstAttribute="leading" secondItem="6Be-e5-G9s" secondAttribute="leading" id="p5P-MU-R3k"/>
                             <constraint firstItem="6YR-zs-8dR" firstAttribute="leading" secondItem="6Be-e5-G9s" secondAttribute="leading" id="prl-9j-hyg"/>
+                            <constraint firstItem="gFe-Cs-y8g" firstAttribute="top" secondItem="6Be-e5-G9s" secondAttribute="top" constant="200" id="vc5-mo-zZH"/>
                             <constraint firstItem="6YR-zs-8dR" firstAttribute="top" secondItem="hPA-yP-38v" secondAttribute="bottom" id="yP9-fS-hrf"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Be-e5-G9s"/>
                     </view>
                     <navigationItem key="navigationItem" id="FgT-kk-eK0"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="gFe-Cs-y8g" id="WnH-zS-cyM"/>
                         <outlet property="flowLayout" destination="EQn-Fj-tX2" id="duZ-wv-VO6"/>
                         <outlet property="mapView" destination="Xbn-aR-CRK" id="RIN-xW-PsZ"/>
                         <outlet property="newCollectionButton" destination="6YR-zs-8dR" id="z0b-UW-bhI"/>

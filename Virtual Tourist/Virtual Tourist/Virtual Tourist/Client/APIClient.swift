@@ -18,7 +18,7 @@ class APIClient: NSObject {
     }
     
     // Method to fire off the GET request for photos at the specified Pins latitude and longitude
-    func getPhotosByLatitudeAndLongitude(latitude: Double, longitude: Double, completionHandlerForFlickrGETPHotos: @escaping (_ result: [NSData]?, _ error: String? ) -> Void ) {
+    func getPhotosByLatitudeAndLongitude(latitude: Double, longitude: Double, randomPage: Int, completionHandlerForFlickrGETPHotos: @escaping (_ result: [NSData]?, _ error: String? ) -> Void ) {
         
         let methodParameters = [
             Constants.FlickrParameterKeys.Method: Constants.FlickrParameterValues.SearchMethod,
@@ -27,7 +27,9 @@ class APIClient: NSObject {
             Constants.FlickrParameterKeys.SafeSearch: Constants.FlickrParameterValues.UseSafeSearch,
             Constants.FlickrParameterKeys.Extras: Constants.FlickrParameterValues.MediumURL,
             Constants.FlickrParameterKeys.Format: Constants.FlickrParameterValues.ResponseFormat,
-            Constants.FlickrParameterKeys.NoJSONCallback: Constants.FlickrParameterValues.DisableJSONCallback
+            Constants.FlickrParameterKeys.NoJSONCallback: Constants.FlickrParameterValues.DisableJSONCallback,
+            Constants.FlickrParameterKeys.PerPage: Constants.FlickrParameterValues.numberOfPages,
+            Constants.FlickrParameterKeys.Page: "\(randomPage)"
         ]
         
         let request = URLRequest(url: flickrURLFromParameters(methodParameters as [String:AnyObject]))

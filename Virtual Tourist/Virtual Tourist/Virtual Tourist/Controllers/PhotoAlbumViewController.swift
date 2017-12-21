@@ -17,6 +17,7 @@ class PhotoAlbumViewController: UIViewController {
     @IBOutlet weak var photoAlbumCollectionView: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var newCollectionButton: UIButton!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     var pin: Pin?
     var appDelegate: AppDelegate?
@@ -26,8 +27,25 @@ class PhotoAlbumViewController: UIViewController {
     // IBAction to trigger a new api call to 'update' the photo album for a given pin
     @IBAction func newCollectionButtonWasPressed(_ sender: Any) {
         
-        if let pin = pin {
+        if let pin = pin, let stack = appDelegate?.stack,
+            let fetchedResultsController = coreDataConvenience.fetchedResultsController {
             newCollectionButton.isEnabled = false
+            activityIndicator.isHidden = false
+            activityIndicator.startAnimating()
+            
+            // delete the previous photo album from core data in the background while we fetch new photos
+            stack.performBackgroundBatchOperation { (workerContext) in
+                if let photos = fetchedResultsController.fetchedObjects as? [Photo] {
+                    // have to run core data operations on the main thread for thread safe operations
+                    DispatchQueue.main.async {
+                        let _ = photos.map { (photo) in
+                            fetchedResultsController.managedObjectContext.delete(photo)
+                            stack.save()
+                        }
+                    }
+                }
+                print("Finished background batch deletion!")
+            }
             startFlickrPhotosAPICall(pin: pin)
         }
     }
@@ -41,8 +59,17 @@ class PhotoAlbumViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        configureView()
+    }
+    
+    func configureView() {
         // unhide the navigation bar
         self.navigationController?.navigationBar.isHidden = false
+        
+        // hide the activity indicator but also make sure to bring it to the front so when we unhide it and
+        // start animating it, it actually shows
+        activityIndicator.isHidden = true
+        view.bringSubview(toFront: activityIndicator)
         
         // configure the flow layout of the collection view
         let space: CGFloat = 1.0
@@ -84,6 +111,8 @@ class PhotoAlbumViewController: UIViewController {
             fetchedResultsController.fetchedObjects?.count == 0 {
 
             newCollectionButton.isEnabled = false
+            activityIndicator.isHidden = false
+            activityIndicator.startAnimating()
             startFlickrPhotosAPICall(pin: pin)
         }
         else {
@@ -103,9 +132,12 @@ class PhotoAlbumViewController: UIViewController {
     
     // method to configure the collection view
     func startFlickrPhotosAPICall(pin: Pin) {
+        
+        // select a random page everytime we call the api
+        let randomPage = Int(arc4random_uniform(UInt32(40))) + 1
     
         // Start the api call to get the photos that will populate the collection view
-        APIClient.sharedInstance().getPhotosByLatitudeAndLongitude(latitude: pin.latitude, longitude: pin.longitude) { (photos, error) in
+        APIClient.sharedInstance().getPhotosByLatitudeAndLongitude(latitude: pin.latitude, longitude: pin.longitude, randomPage: randomPage) { (photos, error) in
             
             // make sure there wasn't an error returned
             guard (error == nil) else {
@@ -125,24 +157,27 @@ class PhotoAlbumViewController: UIViewController {
     func savePhotosToCoreData(photos: [NSData], pin: Pin) {
         
         if let fetchedResultsController = coreDataConvenience.fetchedResultsController {
-            
-            let _ = photos.map { (photoData) in
-                // save the photoData as a 'Photo' managed object
-                let photo = Photo(imageData: photoData, context: fetchedResultsController.managedObjectContext)
-                photo.pin = pin
-                print("Just created and saved a photo!: \(photo)")
-            }
-            
-            // manually save the data into core data
-            if let stack = appDelegate?.stack {
-                stack.save()
-            }
-            
-            // update the fetched results controller with new data
-            coreDataConvenience.executeSearch()
-            
-            // finally reload the collection view data and enable the 'new collection' button
+           
+            // have to run core data operations on the main thread for thread safe operations
             DispatchQueue.main.async {
+                let _ = photos.map { (photoData) in
+                    // save the photoData as a 'Photo' managed object
+                    let photo = Photo(imageData: photoData, context: fetchedResultsController.managedObjectContext)
+                    photo.pin = pin
+                    print("Just created and saved a photo!: \(photo)")
+                }
+                
+                // manually save the data into core data
+                if let stack = self.appDelegate?.stack {
+                    stack.save()
+                }
+                
+                // update the fetched results controller with new data
+                self.coreDataConvenience.executeSearch()
+            
+                // finally reload the collection view data and enable the 'new collection' button
+                self.activityIndicator.stopAnimating()
+                self.activityIndicator.isHidden = true
                 self.newCollectionButton.isEnabled = true
                 self.photoAlbumCollectionView.reloadData()
             }
@@ -182,15 +217,23 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
     
     // delete the photo from the fetched results controller and update the collection view
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let fetchedResultsController = coreDataConvenience.fetchedResultsController, fetchedResultsController.fetchedObjects?.count != 0,
-            let photo = fetchedResultsController.object(at: indexPath) as? Photo {
-            
-            fetchedResultsController.managedObjectContext.delete(photo)
-            
-            // update the fetched results controller to represent the most recent deletion
-            coreDataConvenience.executeSearch()
-            
-            collectionView.reloadData()
+        
+        // have to run core data operations on the main thread for thread safe operations
+        DispatchQueue.main.async {
+            if let fetchedResultsController = self.coreDataConvenience.fetchedResultsController, fetchedResultsController.fetchedObjects?.count != 0,
+                let photo = fetchedResultsController.object(at: indexPath) as? Photo,
+                let stack = self.appDelegate?.stack {
+                
+                fetchedResultsController.managedObjectContext.delete(photo)
+                
+                // save the stack with the updated deleted picture
+                stack.save()
+                
+                // update the fetched results controller to represent the most recent deletion
+                self.coreDataConvenience.executeSearch()
+                
+                collectionView.reloadData()
+            }
         }
     }
     
@@ -201,7 +244,7 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
         }
 
         // max number of items if there are no fetched objects
-        return 250
+        return 25
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -228,5 +271,4 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
 
 class PhotoAlbumCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!
-    
 }

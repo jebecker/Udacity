@@ -52,7 +52,8 @@ class MapViewController: UIViewController {
     // hide the navigation bar when a user comes back to the map view
     override func viewWillAppear(_ animated: Bool) {
         // hide the navigation bar
-        self.navigationController?.navigationBar.isHidden = true
+        navigationController?.navigationBar.isHidden = true
+        
     }
     
 }
@@ -67,7 +68,7 @@ extension MapViewController: MKMapViewDelegate {
         
         // Add a UILongGestureRecognizer to the map to allow for 'touch and hold' to drop a pin
         let gestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(addAnnotation(gestureRecognizer:)))
-        gestureRecognizer.minimumPressDuration = 1.0
+        gestureRecognizer.minimumPressDuration = 0.5
         
         // add the passed in Gesture Recognizer to the mapp
         mapView.addGestureRecognizer(gestureRecognizer)
@@ -176,6 +177,9 @@ extension MapViewController: MKMapViewDelegate {
         
         selectedPinLatitude = pin.coordinate.latitude
         selectedPinLongitude = pin.coordinate.longitude
+        
+        // now deselect the pin so when we come back, its not already selected
+        mapView.deselectAnnotation(pin, animated: true)
         
         performSegue(withIdentifier: "mapViewToPhotoAlbumSegue", sender: nil)
     }
